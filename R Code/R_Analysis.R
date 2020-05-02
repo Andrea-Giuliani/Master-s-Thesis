@@ -15,6 +15,7 @@ library(formattable)
 library(car)
 library(gdata)
 library(lmtest)
+library(olsrr)
 
 #Load Dataset
 data<-read.csv("ESS_Dataframe.csv")
@@ -450,6 +451,9 @@ screenreg(ols1, custom.coef.names=c("Intercept","Public Opinion", "GDP", "GDP pe
 
 #Informative plots
 plot(ols1)
+
+#Checking for collinearity between GDP and GDP per capita
+ols_vif_tol(ols1)
 
 #OLS with fixed effects
 ols2<-lm(lexpenditure~public_opinion_percent+lgdp+lgdp_capita+edu+factor(public_opinion_cat), data=data_ols_tidy)
