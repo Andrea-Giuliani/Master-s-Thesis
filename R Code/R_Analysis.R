@@ -195,19 +195,92 @@ av_trstplt<-av_trstplt[1:8]
 exp_trstplt<-c(1039.6, 1174.7, 1472.7, 1225, 1373, 2374.5, 1711, 3077.3)
 data_plt<-data.frame(av_trstplt, exp_trstplt, years)
 
-#Plot How Expenditure Changed Over The Years
+#Plot How Expenditure Changed Over The Years Single Graph
 data_exp<-data.frame(exp_gincdif, exp_imbgeco, exp_impenv, exp_ipeqopt, exp_ipstrgv, exp_trstlgl, exp_trstplc, 
                      exp_ipudrst, exp_freehms, exp_trstplt, years)
 clean_data_exp <- data_exp %>% gather(variable, value, -years)
 ggplot(data=clean_data_exp, aes(x= years, y=value, group=variable, colour=variable)) +
   geom_line() +
   geom_point( size=4, shape=21, fill="white") +
-  labs(x="Years",y="Value", title="Changes in the Yearly Expenditure of the European Union per Sector") +
-  facet_grid(variable~., scales="free")+
+  labs(x="Years",y="Million of Euros Invested", title="Changes in the Yearly Expenditure of the European Union per Sector") +
+  facet_grid(variable~., scales="free_y")+
   scale_color_hue(labels = c("Gays and Lesbians Rights", "Welfare", "Immigration", "Environment", "Equality", 
                              "Safety", "Internationality", "Trust Legal System", "Trust Police", "Trust Politicians"))+
   scale_x_continuous(breaks = years)+
   theme_classic()
+
+#Plot How Expenditure Changed Over The Years Multiple Plots
+p1<-ggplot(data=data_exp, aes(x= years, y=exp_impenv)) +
+  geom_line() +
+  geom_point() +
+  labs(x="Years",y="Million of Euros Invested", title="Changes in the Yearly EU Expenditure for Environmental Policies") +
+  scale_x_continuous(breaks = years)+
+  theme_classic()
+
+p2<-ggplot(data=data_exp, aes(x= years, y=exp_ipeqopt)) +
+  geom_line() +
+  geom_point() +
+  labs(x="Years",y="Million of Euros Invested", title="Changes in the Yearly EU Expenditure for Equality") +
+  scale_x_continuous(breaks = years)+
+  theme_classic()
+
+p3<-ggplot(data=data_exp, aes(x= years, y=exp_imbgeco)) +
+  geom_line() +
+  geom_point() +
+  labs(x="Years",y="Million of Euros Invested", title="Changes in the Yearly EU Expenditure for Immigration Policies") +
+  scale_x_continuous(breaks = years)+
+  theme_classic()
+
+p4<-ggplot(data=data_exp, aes(x= years, y=exp_trstplc)) +
+  geom_line() +
+  geom_point() +
+  labs(x="Years",y="Million of Euros Invested", title="Changes in the Yearly EU Expenditure for Trust in Police") +
+  scale_x_continuous(breaks = years)+
+  theme_classic()
+
+p5<-ggplot(data=data_exp, aes(x= years, y=exp_ipstrgv)) +
+  geom_line() +
+  geom_point() +
+  labs(x="Years",y="Million of Euros Invested", title="Changes in the Yearly EU Expenditure for Safety Policies") +
+  scale_x_continuous(breaks = years)+
+  theme_classic()
+
+p6<-ggplot(data=data_exp, aes(x= years, y=exp_trstlgl)) +
+  geom_line() +
+  geom_point() +
+  labs(x="Years",y="Million of Euros Invested", title="Changes in the Yearly EU Expenditure for Trust in Legal System") +
+  scale_x_continuous(breaks = years)+
+  theme_classic()
+
+p7<-ggplot(data=data_exp, aes(x= years, y=exp_gincdif)) +
+  geom_line() +
+  geom_point() +
+  labs(x="Years",y="Million of Euros Invested", title="Changes in the Yearly EU Expenditure for Welfare Policies") +
+  scale_x_continuous(breaks = years)+
+  theme_classic()
+
+p8<-ggplot(data=data_exp, aes(x= years, y=exp_ipudrst)) +
+  geom_line() +
+  geom_point() +
+  labs(x="Years",y="Million of Euros Invested", title="Changes in the Yearly EU Expenditure for Policies Fostering Internationality") +
+  scale_x_continuous(breaks = years)+
+  theme_classic()
+
+p9<-ggplot(data=data_exp, aes(x= years, y=exp_freehms)) +
+  geom_line() +
+  geom_point() +
+  labs(x="Years",y="Million of Euros Invested", title="Changes in the Yearly EU Expenditure for Gays and Lesbians' Rights") +
+  scale_x_continuous(breaks = years)+
+  theme_classic()
+
+p10<-ggplot(data=data_exp, aes(x= years, y=exp_trstplt)) +
+  geom_line() +
+  geom_point() +
+  labs(x="Years",y="Million of Euros Invested", title="Changes in the Yearly EU Expenditure for Trust in Politicians") +
+  scale_x_continuous(breaks = years)+
+  theme_classic()
+
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, ncol=2, nrow =5)
 
 #Preparing Data for Creating a Heatmap
 data_hm<-data.frame(data_env, data_eq, data_imm, data_plc, data_saf, data_tls, data_ws, data_in, data_gl, data_plt)
@@ -454,6 +527,12 @@ plot(ols1)
 
 #Checking for collinearity between GDP and GDP per capita
 ols_vif_tol(ols1)
+
+#TChecking the factor by which the standard errors are inflated
+sqrt(1.00)
+sqrt(3.67)
+sqrt(8.32)
+sqrt(4.38)
 
 #OLS with fixed effects
 ols2<-lm(lexpenditure~public_opinion_percent+lgdp+lgdp_capita+edu+factor(public_opinion_cat), data=data_ols_tidy)
